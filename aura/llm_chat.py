@@ -1,7 +1,7 @@
 import os
 import requests
 from dotenv import load_dotenv
-from llama_cpp import Llama
+# from llama_cpp import Llama
 
 load_dotenv()
 
@@ -61,55 +61,55 @@ def ask_online_llm(prompt):
         return ask_groq(prompt)
 
 
-# def ask_llamacpp(prompt):
-#     system_prompt = (
-#         "You are AURA, a helpful robot assistant. "
-#         "Answer briefly and conversationally (2–3 lines max)."
-#     )
-
-#     payload = {
-#         "prompt": f"{system_prompt}\n\nStudent: {prompt}\nAURA:",
-#         "n_predict": 60,
-#         "temperature": 0.3,
-#         "stop": ["\nStudent:", "\nAURA:"]
-#     }
-
-#     try:
-#         r = requests.post(LLAMACPP_URL, json=payload, timeout=60)
-#         r.raise_for_status()
-#         return r.json().get("content", "").strip()
-#     except Exception as e:
-#         return f"Offline model error: {e}"
-
-llm = Llama(
-    model_path=MODEL_PATH,
-    n_ctx=2048,
-    n_threads=4,     # set to CPU cores of your Raspberry Pi
-    n_batch=256,
-    verbose=False
-)
-
-# =======================
-# LLaMA.cpp (Offline)
-# =======================
-
-def ask_llamacpp(prompt: str) -> str:
-    full_prompt = (
-        f"{SYSTEM_PROMPT}\n\n"
-        f"Student: {prompt}\n"
-        f"AURA:"
+def ask_llamacpp(prompt):
+    system_prompt = (
+        "You are AURA, a helpful robot assistant. "
+        "Answer briefly and conversationally (2–3 lines max)."
     )
 
+    payload = {
+        "prompt": f"{system_prompt}\n\nStudent: {prompt}\nAURA:",
+        "n_predict": 60,
+        "temperature": 0.3,
+        "stop": ["\nStudent:", "\nAURA:"]
+    }
+
     try:
-        output = llm(
-            full_prompt,
-            max_tokens=80,
-            temperature=0.3,
-            stop=["Student:", "AURA:"]
-        )
-
-        return output["choices"][0]["text"].strip()
-
+        r = requests.post(LLAMACPP_URL, json=payload, timeout=60)
+        r.raise_for_status()
+        return r.json().get("content", "").strip()
     except Exception as e:
         return f"Offline model error: {e}"
+
+# llm = Llama(
+#     model_path=MODEL_PATH,
+#     n_ctx=2048,
+#     n_threads=4,     # set to CPU cores of your Raspberry Pi
+#     n_batch=256,
+#     verbose=False
+# )
+
+# # =======================
+# # LLaMA.cpp (Offline)
+# # =======================
+
+# def ask_llamacpp(prompt: str) -> str:
+#     full_prompt = (
+#         f"{SYSTEM_PROMPT}\n\n"
+#         f"Student: {prompt}\n"
+#         f"AURA:"
+#     )
+
+#     try:
+#         output = llm(
+#             full_prompt,
+#             max_tokens=80,
+#             temperature=0.3,
+#             stop=["Student:", "AURA:"]
+#         )
+
+#         return output["choices"][0]["text"].strip()
+
+#     except Exception as e:
+#         return f"Offline model error: {e}"
 
