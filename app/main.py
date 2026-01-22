@@ -94,7 +94,12 @@ def ppt_generator_mode():
 
     while True:
         try:
-            topic = offline_listen()
+            if internet_available():
+                print("\n🌐 ONLINE MODE (Deepgram)")
+                topic = deepgram_listen(6)
+            else:
+                print("\n📴 OFFLINE MODE (Whisper)")
+                topic = offline_listen()
 
             if not topic:
                 continue
